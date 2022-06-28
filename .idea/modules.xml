@@ -3,7 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/Bank-Service.iml" filepath="$PROJECT_DIR$/.idea/Bank-Service.iml" />
-      <module fileurl="file://$PROJECT_DIR$/Bank_Service-master/idbi.iml" filepath="$PROJECT_DIR$/Bank_Service-master/idbi.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Bank-Service/idbi.iml" filepath="$PROJECT_DIR$/Bank-Service/idbi.iml" />
     </modules>
   </component>
 </project>

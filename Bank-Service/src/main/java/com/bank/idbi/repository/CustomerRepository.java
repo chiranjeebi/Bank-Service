@@ -8,6 +8,6 @@ import java.util.Optional;
 
 @RestController
 public interface CustomerRepository  extends JpaRepository<CustomerEntity,Long> {
-    Optional<CustomerEntity> findByAdhaar(String adhaarNo);
+    Optional<CustomerEntity> findByPhone(String Phone);
     Optional<CustomerEntity> findByOwnerEmailAndPassword(String email, String password);
 }

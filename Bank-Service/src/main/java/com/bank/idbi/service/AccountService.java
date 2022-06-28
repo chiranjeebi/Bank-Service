@@ -5,9 +5,12 @@ import com.bank.idbi.dto.*;
 import java.util.List;
 
 public interface  AccountService {
-    AccountDTO credit(Long customerId, Double amount);
-    AccountDTO debit(Long customerId, Double balance);
-    List<TransactionDTO> getAllTransactions(Long customerId);
-    List<CustomerDTO> addBeneficiary(BeneficiaryDTO beneficiaryDTO);
-    String transferMoney(TransferDTO transferDTO);
+    public   AccountDTO credit(Long customerId, Double amount);
+ public    AccountDTO debit(Long customerId, Double balance);
+    public  List<TransactionDTO> getAllTransactions(Long customerId);
+    public  List<CustomerDTO> addBeneficiary(BeneficiaryDTO beneficiaryDTO);
+    public   String transferMoney(TransferDTO transferDTO);
+/*    public AccountDTO getAccountDetails(Long accountNumber);//*/
+void deleteCustomer(Long customerId);
+
 }

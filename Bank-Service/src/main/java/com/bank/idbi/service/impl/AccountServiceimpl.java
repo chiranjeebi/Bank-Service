@@ -28,10 +28,10 @@ public class AccountServiceimpl implements AccountService {
     TransactionRepository transactionRepository;
     @Override
     public AccountDTO credit(Long customerId, Double amount) {
-        AccountDTO accountDTO = new AccountDTO();
-        Optional<CustomerEntity> custEntity = customerRepository.findById(customerId);
+        AccountDTO accountDTO = new AccountDTO();  //create an object
+        Optional<CustomerEntity> custEntity = customerRepository.findById(customerId);//
         if (custEntity.isPresent()) {
-            Long accNumber = custEntity.get().getAccount().getAccountId();
+            Long accNumber = custEntity.get().getAccount().getAccountId();//get
             Optional<AccountEntity> accEntity = accountRepository.findById(accNumber);
             AccountEntity accountEntity = null;
 
@@ -52,7 +52,7 @@ public class AccountServiceimpl implements AccountService {
             }
         } else {
             ErrorModel model = new ErrorModel();
-            model.setMessage("Sorry no account found");
+            model.setMessage("No account found");
             model.setCode("ACCOUNT_001");
             List<ErrorModel> errors = new ArrayList<>();
             errors.add(model);
@@ -97,8 +97,6 @@ public class AccountServiceimpl implements AccountService {
             throw new BusinessException(errors);
 
         }
-
-
         return accountDTO;
     }
 
@@ -126,8 +124,6 @@ public class AccountServiceimpl implements AccountService {
             List<ErrorModel> errors = new ArrayList<>();
             errors.add(model);
             throw new BusinessException(errors);
-
-
         }
         return transactionList;
     }
@@ -150,8 +146,8 @@ public class AccountServiceimpl implements AccountService {
 
                 } else {
                     ErrorModel model = new ErrorModel();
-                    model.setMessage("Sorry no beneficiary account found for " + c.getId());
-                    model.setCode("ACCOUNT_002");
+                    model.setMessage("no account found for " + c.getId());
+                    model.setCode("ACCOUNT_001");
                     List<ErrorModel> errors = new ArrayList<>();
                     errors.add(model);
                     throw new BusinessException(errors);
@@ -163,7 +159,6 @@ public class AccountServiceimpl implements AccountService {
             customerEntity.setBeneficiaries(sb.toString());
             customerEntity = customerRepository.save(customerEntity);
 
-
         } else {
             ErrorModel model = new ErrorModel();
             model.setMessage("Sorry no account found");
@@ -171,21 +166,21 @@ public class AccountServiceimpl implements AccountService {
             List<ErrorModel> errors = new ArrayList<>();
             errors.add(model);
             throw new BusinessException(errors);
-
         }
-
-        return beneficairyList;
+   return beneficairyList;
     }
 
     @Override
     public String transferMoney(TransferDTO transferDTO) {
         Optional<CustomerEntity> custEntity = customerRepository.findById(transferDTO.getCustId());
+
         if (custEntity.isPresent()) {
             CustomerEntity cust = custEntity.get();
             cust.getAccount().getBalance();
+
             if (transferDTO.getAmount() > cust.getAccount().getBalance()) {
                 ErrorModel model = new ErrorModel();
-                model.setMessage("Sorry you do not have sufficient balance in your account to make a transfer");
+                model.setMessage(" You don't have minimum balance");
                 model.setCode("TRANSFER_001");
                 List<ErrorModel> errors = new ArrayList<>();
                 errors.add(model);
@@ -193,20 +188,20 @@ public class AccountServiceimpl implements AccountService {
 
             }
             else {
-                Optional<CustomerEntity> bene = customerRepository.findById(transferDTO.getBeneficiaryId());
-                if (bene.isPresent()) {
-                    CustomerEntity custEn = bene.get();
-                    Double newAmountBene = custEn.getAccount().getBalance() + transferDTO.getAmount();
-                    custEn.getAccount().setBalance(newAmountBene);
-                    custEn = customerRepository.save(custEn);
+                Optional<CustomerEntity> optionalCustomer = customerRepository.findById(transferDTO.getBeneficiaryId());
+                if (optionalCustomer.isPresent()) {
+                    CustomerEntity customer = optionalCustomer.get();
+                    Double newAmountBene = customer.getAccount().getBalance() + transferDTO.getAmount();
+                    customer.getAccount().setBalance(newAmountBene);
+                    customer = customerRepository.save(customer);
                     Double newAmountCust = cust.getAccount().getBalance() - transferDTO.getAmount();
                     cust.getAccount().setBalance(newAmountCust);
                     cust=customerRepository.save(cust);
 
                 } else {
                     ErrorModel model = new ErrorModel();
-                    model.setMessage("Sorry no beneficiary account found for " + transferDTO.getBeneficiaryId());
-                    model.setCode("ACCOUNT_002");
+                    model.setMessage(" No account found for " + transferDTO.getBeneficiaryId());
+                    model.setCode("ACCOUNT_001");
                     List<ErrorModel> errors = new ArrayList<>();
                     errors.add(model);
                     throw new BusinessException(errors);
@@ -217,7 +212,7 @@ public class AccountServiceimpl implements AccountService {
         }
         else{
             ErrorModel model = new ErrorModel();
-            model.setMessage("Sorry no customer account found for " + transferDTO.getCustId());
+            model.setMessage("No account found for " + transferDTO.getCustId());
             model.setCode("ACCOUNT_002");
             List<ErrorModel> errors = new ArrayList<>();
             errors.add(model);
@@ -226,4 +221,33 @@ public class AccountServiceimpl implements AccountService {
         return "Sucessfully transferred your money";
 
     }
+
+    @Override
+    public void deleteCustomer(Long customerId) {
+        customerRepository.deleteById(customerId);
+    }
+
+/*    @Override
+    public List<CustomerDTO> deleteCustomer(Long customerId) {
+        Optional<CustomerEntity> customerEntityList=customerRepository.findById(customerId); //when it will go to repo it will always return entity
+ CustomerDTO customerDTO=null;
+        List<CustomerDTO> customerDTOS = new ArrayList<>();
+
+        if (customerEntityList.isPresent()){
+     CustomerDTO customer=new CustomerDTO();
+     BeanUtils.copyProperties(customerEntityList.get(),customer);
+ }
+        return customerDTOS;
+    }*/
+
+/*    @Override
+    public AccountDTO getAccountDetails(Long accountNumber) {
+        Optional<AccountEntity> optAccount = accountRepository.findById(accountNumber); //
+        AccountDTO accountDTO = null;
+        if(optAccount.isPresent()){
+            accountDTO = new AccountDTO();
+            BeanUtils.copyProperties(optAccount.get(), accountDTO);
+        }
+        return accountDTO;
+    }*/
 }
