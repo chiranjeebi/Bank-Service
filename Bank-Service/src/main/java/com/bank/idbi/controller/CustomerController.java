@@ -15,16 +15,20 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/customer")
 public class CustomerController {
+
     @Autowired
     private CustomerService customerService;
     @Autowired
     private AccountService accountService;
 
 
+
     @PostMapping("/register")
     public ResponseEntity<CustomerDTO> register(@Valid @RequestBody CustomerDTO customerDTO) {
         customerDTO = customerService.register(customerDTO);
         return new ResponseEntity<>(customerDTO, HttpStatus.OK);
+        //ResponseEntity<CustomerDTO> responseEntity=new ResponseEntity<>(customerDTO,HttpStatus.OK);
+        //return responseEntity;
     }
 
     @PostMapping("/login")
@@ -50,7 +54,7 @@ public class CustomerController {
     }
 
     @GetMapping("/alltransactions/{customerId}")
-    public ResponseEntity<List<TransactionDTO>> getAllTransactionss(@PathVariable Long customerId) {
+    public ResponseEntity<List<TransactionDTO>> getAllTransactions(@PathVariable Long customerId) {
         List<TransactionDTO> transList = accountService.getAllTransactions(customerId);
         ResponseEntity<List<TransactionDTO>> responseEntity = new ResponseEntity<>(transList, HttpStatus.OK);
         return responseEntity;
